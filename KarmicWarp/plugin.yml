@@ -1,0 +1,35 @@
+name: KarmicWarp
+
+main: com.mitsugaru.KarmicWarp.KarmicWarp
+
+version: 0.01
+
+website: http://dev.bukkit.org/server-mods/karmicwarp/
+
+description: Simple warp system
+
+authors:
+  - Mitsugaru
+
+commands:
+  warp:
+    description: Root command for KarmicWarp
+    usage: /warp ? - Show help on KarmicWarp
+
+permissions:
+    KarmicWarp.*:
+        description: Gives access to all KarmicWarp commands
+        children:
+            KarmicWarp.warp: true
+            KarmicWarp.edit: true
+            KarmicWarp.warp.other: true
+        default: op
+    KarmicWarp.warp:
+        description: Allows user to use warps
+        default: op
+    KarmicWarp.warp.other:
+        description: Allows user to warp others
+        default: op
+    KarmicWarp.edit:
+        description: Allows user create/destroy warps
+        default: op
