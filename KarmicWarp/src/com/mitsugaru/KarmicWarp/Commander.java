@@ -88,6 +88,18 @@ public class Commander implements CommandExecutor {
 							+ " Lack permission: KarmicWarp.edit");
 				}
 			}
+			else if(com.equals("update"))
+			{
+				if(perm.checkPermission(sender, "KarmicWarp.edit"))
+				{
+					this.updateWarp(sender, args);
+				}
+				else
+				{
+					sender.sendMessage(ChatColor.RED + prefix
+							+ " Lack permission: KarmicWarp.edit");
+				}
+			}
 			else if (com.equals("list"))
 			{
 				this.listWarps(sender, args);
@@ -133,6 +145,47 @@ public class Commander implements CommandExecutor {
 			debugTime(sender, time);
 		}
 		return true;
+	}
+
+	private void updateWarp(CommandSender sender, String[] args) {
+		if(sender instanceof Player)
+		{
+			Player player = (Player) sender;
+			if (args.length > 1)
+			{
+				//Grab warp name
+				String name = args[1];
+				if(this.warpExists(name))
+				{
+					// Update warp
+					Location l = player.getLocation();
+					String query = "UPDATE warps SET world='" + l.getWorld().getName() + "',x='"
+							+ l.getX() + "',y='" + l.getY() + "',z='"
+							+ l.getZ() + "' WHERE name='" + name + "';";
+					kw.getLiteDB().standardQuery(query);
+					sender.sendMessage(ChatColor.GREEN + prefix
+							+ " Warp updated");
+				}
+				else
+				{
+					//Warp does not exist
+					sender.sendMessage(ChatColor.RED + prefix
+							+ " Warp does not exist.");
+				}
+			}
+			else
+			{
+				//Need to provide warp name
+				sender.sendMessage(ChatColor.RED + prefix
+						+ " Missing warp name.");
+			}
+		}
+		else
+		{
+			//Cannot run as console
+			sender.sendMessage(ChatColor.RED + prefix
+					+ " Cannot use command as console.");
+		}
 	}
 
 	private void listWarps(CommandSender sender, String[] args) {
@@ -223,7 +276,7 @@ public class Commander implements CommandExecutor {
 			{
 				String[] name = list.keySet().toArray(new String[0]);
 				Location[] location = list.values().toArray(new Location[0]);
-				sender.sendMessage(ChatColor.GRAY + "=====Warp List====" + "Page" + ChatColor.AQUA + (page.get(sender.getName()) + 1)  + ChatColor.GRAY + " of " + ChatColor.AQUA + num + ChatColor.GRAY + "=====");
+				sender.sendMessage(ChatColor.GRAY + "=====Warp List====" + "Page: " + ChatColor.AQUA + (page.get(sender.getName()) + 1)  + ChatColor.GRAY + " of " + ChatColor.AQUA + num + ChatColor.GRAY + "=====");
 				DecimalFormat twoDForm = new DecimalFormat("#.##");
 				for (int i = ((page.get(sender.getName()).intValue()) * limit); i < ((page
 						.get(sender.getName()).intValue()) * limit) + limit; i++)
@@ -476,7 +529,7 @@ public class Commander implements CommandExecutor {
 				final String name = args[1];
 				if (name.equals("create") || name.equals("remove")
 						|| name.equals("list") || name.equals("prev")
-						|| name.equals("next") || name.equals("?"))
+						|| name.equals("next") || name.equals("?") || name.equals("update"))
 				{
 					sender.sendMessage(ChatColor.RED + prefix
 							+ " Cannot use warp name of a command.");
@@ -607,6 +660,8 @@ public class Commander implements CommandExecutor {
 					+ " : Creates a warp at your current position");
 			sender.sendMessage(ChatColor.GREEN + "/warp remove <name>"
 					+ ChatColor.YELLOW + " : Removes a warp");
+			sender.sendMessage(ChatColor.GREEN + "/warp update <name>"
+					+ ChatColor.YELLOW + " : Updates warp to current location");
 		}
 	}
 
