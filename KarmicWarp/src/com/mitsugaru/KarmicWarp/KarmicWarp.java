@@ -46,7 +46,7 @@ public class KarmicWarp extends JavaPlugin {
 		database = new SQLite(syslog, prefix, "warps", this.getDataFolder()
 				.getAbsolutePath());
 		// Check if item table exists
-		if (!database.checkTable("warp"))
+		if (!database.checkTable("warps"))
 		{
 			syslog.info(prefix + " Created warp table");
 			database.createTable("CREATE TABLE `warps` (`name` TEXT NOT NULL,`world` TEXT NOT NULL,`x` REAL NOT NULL,`y` REAL NOT NULL, 'z' REAL NOT NULL);");
