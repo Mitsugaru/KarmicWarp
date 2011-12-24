@@ -62,7 +62,7 @@ public class Commander implements CommandExecutor {
 				// display help
 				this.displayHelp(sender);
 			}
-			else if (com.equals("create"))
+			else if (com.equals("create") || com.equals("add"))
 			{
 				if (perm.checkPermission(sender, "KarmicWarp.edit"))
 				{
