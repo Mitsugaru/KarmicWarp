@@ -28,13 +28,26 @@ public class KarmicWarp extends JavaPlugin {
 	}
 
 	@Override
-	public void onEnable() {
+	public void onLoad()
+	{
 		//Logger
 		syslog = this.getServer().getLogger();
 
 		//config
 		config = new Config(this);
+		// Connect to sql database
+		database = new SQLite(syslog, prefix, "warps", this.getDataFolder()
+				.getAbsolutePath());
+		// Check if warp table exists
+		if (!database.checkTable("warps"))
+		{
+			syslog.info(prefix + " Created warp table");
+			database.createTable("CREATE TABLE `warps` (`name` TEXT NOT NULL,`world` TEXT NOT NULL,`x` REAL NOT NULL,`y` REAL NOT NULL, 'z' REAL NOT NULL);");
+		}
+	}
 
+	@Override
+	public void onEnable() {
 		//Create permission handler
 		perm = new PermCheck();
 
@@ -42,15 +55,6 @@ public class KarmicWarp extends JavaPlugin {
 		commander = new Commander(this);
 		getCommand("warp").setExecutor(commander);
 
-		// Connect to sql database
-		database = new SQLite(syslog, prefix, "warps", this.getDataFolder()
-				.getAbsolutePath());
-		// Check if item table exists
-		if (!database.checkTable("warps"))
-		{
-			syslog.info(prefix + " Created warp table");
-			database.createTable("CREATE TABLE `warps` (`name` TEXT NOT NULL,`world` TEXT NOT NULL,`x` REAL NOT NULL,`y` REAL NOT NULL, 'z' REAL NOT NULL);");
-		}
 		syslog.info(prefix + " KarmicWarp v" + this.getDescription().getVersion() + " enabled");
 	}
 
