@@ -424,6 +424,7 @@ public class Commander implements CommandExecutor {
 		}
 	}
 
+	//TODO Request: warp name not case sensitive
 	/**
 	 * Warp a player to given warp
 	 *
@@ -578,6 +579,7 @@ public class Commander implements CommandExecutor {
 		}
 	}
 
+	//TODO Request: warp name not case sensitive
 	/**
 	 * Check if warp exists in database
 	 *
