@@ -4,7 +4,7 @@ import java.util.logging.Logger;
 
 import org.bukkit.plugin.java.JavaPlugin;
 
-import lib.PatPeter.SQLibrary.SQLite;
+import lib.Mitsugaru.SQLibrary.SQLite;
 
 public class KarmicWarp extends JavaPlugin {
 	//Class variables
