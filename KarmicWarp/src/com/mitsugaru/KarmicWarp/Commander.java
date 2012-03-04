@@ -1,11 +1,12 @@
 package com.mitsugaru.KarmicWarp;
 
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.DecimalFormat;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Vector;
+
+import lib.Mitsugaru.SQLibrary.Database.Query;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -211,27 +212,27 @@ public class Commander implements CommandExecutor {
 		}
 
 		// Grab list of warps
-		ResultSet rs = kw.getLiteDB().select("SELECT * FROM warps;");
+		Query rs = kw.getLiteDB().select("SELECT * FROM warps;");
 		Map<String, Location> list = new HashMap<String, Location>();
 		try
 		{
-			if (rs.next())
+			if (rs.getResult().next())
 			{
 				do
 				{
-					World w = kw.getServer().getWorld(rs.getString("world"));
+					World w = kw.getServer().getWorld(rs.getResult().getString("world"));
 					// Check if world exists
 					if (w != null)
 					{
 						list.put(
-								rs.getString("name"),
-								new Location(w, rs.getDouble("x"), rs
-										.getDouble("y"), rs.getDouble("z")));
+								rs.getResult().getString("name"),
+								new Location(w, rs.getResult().getDouble("x"), rs.getResult()
+										.getDouble("y"), rs.getResult().getDouble("z")));
 					}
 				}
-				while (rs.next());
+				while (rs.getResult().next());
 			}
-			rs.close();
+			rs.closeQuery();
 		}
 		catch (SQLException e)
 		{
@@ -437,23 +438,23 @@ public class Commander implements CommandExecutor {
 		try
 		{
 			String query = "SELECT * FROM warps WHERE name='" + warp + "';";
-			ResultSet rs = kw.getLiteDB().select(query);
-			if (rs.next())
+			Query rs = kw.getLiteDB().select(query);
+			if (rs.getResult().next())
 			{
-				World w = kw.getServer().getWorld(rs.getString("world"));
+				World w = kw.getServer().getWorld(rs.getResult().getString("world"));
 				// Check if world exists
 				if (w != null)
 				{
 					// Teleport player to location
-					Location l = new Location(w, rs.getDouble("x"),
-							rs.getDouble("y"), rs.getDouble("z"));
+					Location l = new Location(w, rs.getResult().getDouble("x"),
+							rs.getResult().getDouble("y"), rs.getResult().getDouble("z"));
 					player.teleport(l);
 				}
 				else
 				{
 					// World does not exist
 					sender.sendMessage(ChatColor.RED + prefix + " World '"
-							+ rs.getString("world") + "' does not exist");
+							+ rs.getResult().getString("world") + "' does not exist");
 				}
 			}
 			else
@@ -461,7 +462,7 @@ public class Commander implements CommandExecutor {
 				// Warp does not exist
 				sender.sendMessage(ChatColor.RED + prefix + " warp lost");
 			}
-			rs.close();
+			rs.closeQuery();
 		}
 		catch (SQLException e)
 		{
@@ -595,16 +596,16 @@ public class Commander implements CommandExecutor {
 			// Check if name already exists in database
 			String query = "SELECT COUNT(*) FROM warps WHERE name='" + name
 					+ "';";
-			ResultSet rs = kw.getLiteDB().select(query);
-			if (rs.next())
+			Query rs = kw.getLiteDB().select(query);
+			if (rs.getResult().next())
 			{
-				if (rs.getInt(1) >= 1)
+				if (rs.getResult().getInt(1) >= 1)
 				{
 					// we have a warp with the same name
 					has = true;
 				}
 			}
-			rs.close();
+			rs.closeQuery();
 		}
 		catch (SQLException e)
 		{
