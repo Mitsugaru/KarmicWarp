@@ -2,7 +2,7 @@ name: KarmicWarp
 
 main: com.mitsugaru.KarmicWarp.KarmicWarp
 
-version: 0.01
+version: 0.02
 
 website: http://dev.bukkit.org/server-mods/karmicwarp/
 

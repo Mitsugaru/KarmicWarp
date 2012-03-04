@@ -1,14 +1,11 @@
 package com.mitsugaru.KarmicWarp;
 
-import java.util.logging.Logger;
-
 import org.bukkit.plugin.java.JavaPlugin;
 
 import lib.Mitsugaru.SQLibrary.SQLite;
 
 public class KarmicWarp extends JavaPlugin {
 	//Class variables
-	private Logger syslog;
 	private SQLite database;
 	private final static String prefix = "[KarmicWarp]";
 	private Commander commander;
@@ -25,24 +22,21 @@ public class KarmicWarp extends JavaPlugin {
 			// Close connection
 			database.close();
 		}
-		syslog.info(prefix + " Plugin disabled");
+		getLogger().info(prefix + " Plugin disabled");
 	}
 
 	@Override
 	public void onLoad()
 	{
-		//Logger
-		syslog = this.getServer().getLogger();
-
 		//config
 		config = new Config(this);
 		// Connect to sql database
-		database = new SQLite(syslog, prefix, "warps", this.getDataFolder()
+		database = new SQLite(getLogger(), prefix, "warps", this.getDataFolder()
 				.getAbsolutePath());
 		// Check if warp table exists
 		if (!database.checkTable("warps"))
 		{
-			syslog.info(prefix + " Created warp table");
+			getLogger().info(prefix + " Created warp table");
 			database.createTable("CREATE TABLE `warps` (`name` TEXT NOT NULL,`world` TEXT NOT NULL,`x` REAL NOT NULL,`y` REAL NOT NULL, 'z' REAL NOT NULL);");
 		}
 	}
@@ -56,21 +50,12 @@ public class KarmicWarp extends JavaPlugin {
 		commander = new Commander(this);
 		getCommand("warp").setExecutor(commander);
 
-		syslog.info(prefix + " KarmicWarp v" + this.getDescription().getVersion() + " enabled");
+		getLogger().info(prefix + " KarmicWarp v" + this.getDescription().getVersion() + " enabled");
 	}
 
 	public PermCheck getPermissionHandler()
 	{
 		return perm;
-	}
-
-	/**
-	 * Returns the console log object
-	 *
-	 * @return Logger object
-	 */
-	public Logger getLogger() {
-		return syslog;
 	}
 
 	/**
